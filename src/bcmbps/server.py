@@ -65,7 +65,12 @@ def save_presents(path: str):
     Args:
         path (str): The path to the presents
     """
-    shutil.copy(path, get_file_path("presents.json"))
+    if path == get_file_path("presents.json"):
+        return
+    shutil.copy(
+        path,
+        get_file_path("presents.json"),
+    )
 
 
 app = flask.Flask(__name__)
