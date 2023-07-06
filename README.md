@@ -15,7 +15,7 @@ the ban risk of other methods.
 
 ## Prerequisites
 
-I will not go into detail on how to do all of the individual steps but you can
+I won't go into detail on how to do all of the individual steps but you can
 find tutorials online.
 
 1. You will need to modify the game to always verify the
