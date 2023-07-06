@@ -11,7 +11,7 @@ the ban risk of other methods.
 
 - [jamesiotio's CITM](https://github.com/jamestiotio/CITM) for the original
     hacking method and the format of the presents. It no longer works due to
-    PONOS adding a signature to the server responses.
+    PONOS adding a signature to the server responses as well as other changes.
 
 ## Prerequisites
 
@@ -37,8 +37,8 @@ You also need to replace the <https://nyanko-items.ponosgames.com> URL in the
 libnative-lib.so files with your own server URL. This can be done by extracting
 the APK using something like
 [apktool](https://ibotpeaches.github.io/Apktool/). Then you can modify the
-`libnative-lib.so` file using a hex editor (or notepad maybe). Then you can
-repack the APK using apktool and sign it using
+`libnative-lib.so` files in /lib using a hex editor (or notepad maybe). Then you
+can repack the APK using apktool and sign it using
 [apksigner](https://developer.android.com/studio/command-line/apksigner).
 
 The URL needs to be the same length as the original URL and it needs to have
@@ -52,16 +52,16 @@ shorter than the original URL).
 
 Example:
 Run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
-You may need to setup ssh keys for this to work.
+You may need to setup ssh keys for the above to work.
 This makes your url: `https://myserver.serveo.net` and then you would replace the
 ponos url with `https://myserver.serveo.net/items/_`.
 
 The new modding tool will make this process much easier when it is released.
 
-Instead of using a server, you might be able to use something like
+Instead of using a private server, you might be able to use something like
 [mitmproxy](https://mitmproxy.org/) or [Fiddler](https://www.telerik.com/fiddler)
-to modify the server responses. This did not work for me but it might work for
-you.
+to modify the server responses. This did not work for me as the game always
+crashed but it might work for you.
 
 ## Installation
 
@@ -79,7 +79,7 @@ you.
 1. Run `python -m bcmbps --presents path/to/presents.json` to start
     server.
 
-Example Presents:
+Example presents.json
 
 ```json
 [
@@ -114,7 +114,7 @@ or `clientVersion` or `accountId` as the server will do that for you.
 You can also change the public key the game uses to verify the server responses
 to your own public key from a key pair you generated.
 
-You can modify the `nyanko-service-prd.pem` file in the APK to use your own
+You can modify the `assets/nyanko-service-prd.pem` file in the APK to use your own
 public key. You can generate a key pair using openssl:
 
 ```sh
@@ -127,15 +127,17 @@ server for every single request that uses the public key as now the game will
 reject the official server responses from PONOS.
 
 However, I did still manage to do all of that, but the game refused to upload
-the save data to the game servers. It starts the request to an aws url but it
+the save data to the game servers. It does a request to an aws server but it
 aborts immediately after. I couldn't have changed the url of the server it
-uploads to to my own server because the url is from a response of another request with a signature that I don't know how to generate. I gave up on this method after that.
+uploads to to my own server because the url is from a response of another
+request with a signature that I don't know how to generate.
 
 Another problem is that if you have a request with more than one slash in the
 same place, serveo.net will respond with a 301 Moved Permanently and redirect to
 the url with only one slash. But if the original request was a POST request,
 the method will change to GET and break the request. If it instead used a 308
 Permanent Redirect then it would keep the method as POST and it would work.
+When downloading save data, PONOS accidentally has 2 slashes in the same place.
 I don't know how to fix this.
 
 I know that this is not a Flask issue because Flask responds correctly with a
