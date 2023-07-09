@@ -1,1 +1,1 @@
-recursive-include src/cpsmailbox/files *
+recursive-include src/tbcms/files *

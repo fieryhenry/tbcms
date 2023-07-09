@@ -1,6 +1,6 @@
 import argparse
 
-from cpsmailbox import server
+from tbcms import server
 
 
 def handle_args() -> argparse.Namespace:
