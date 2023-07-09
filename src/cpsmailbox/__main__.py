@@ -1,6 +1,6 @@
 import argparse
 
-from bcmbps import server
+from cpsmailbox import server
 
 
 def handle_args() -> argparse.Namespace:

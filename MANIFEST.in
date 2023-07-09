@@ -1,1 +1,1 @@
-recursive-include src/bcmbps/files *
+recursive-include src/cpsmailbox/files *

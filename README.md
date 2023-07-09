@@ -66,17 +66,17 @@ crashed but it might work for you.
 ## Installation
 
 1. Install [Python](https://www.python.org/downloads/) >= 3.9
-1. Run `pip install -U bcmbps`
+1. Run `pip install -U cpsmailbox`
 
 ## Usage
 
-1. Run `python -m bcmbps` or `py -m bcmbps` depending on
+1. Run `python -m cpsmailbox` or `py -m cpsmailbox` depending on
     your system.
-1. Run `python -m bcmbps --help` for more information.
+1. Run `python -m cpsmailbox --help` for more information.
 1. Read [jamesiotio's CITM](https://github.com/jamestiotio/CITM) on how to
     format the list of presents.
 1. Create a file called `presents.json` somewhere and put your presents in it.
-1. Run `python -m bcmbps --presents path/to/presents.json` to start
+1. Run `python -m cpsmailbox --presents path/to/presents.json` to start
     server.
 
 Example presents.json
