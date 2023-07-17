@@ -33,6 +33,9 @@ Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
 })
 ```
 
+or just by patching the libnative-lib.so file using a hex editor to make the
+function always return 1.
+
 You also need to replace the <https://nyanko-items.ponosgames.com> URL in the
 libnative-lib.so files with your own server URL. This can be done by extracting
 the APK using something like
