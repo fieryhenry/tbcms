@@ -15,8 +15,8 @@ the ban risk of other methods.
 
 ## Prerequisites
 
-I won't go into detail on how to do all of the individual steps but you can
-find tutorials online.
+I won't go into detail on how to do all of the individual steps as there are
+already many tutorials on how to do them.
 
 1. You will need to modify the game to always verify the
 nyanko-signature of the server responses as we don't know PONOS's private key.
@@ -54,6 +54,7 @@ doesn't change (you can use any subdomain as long as the total url length is
 shorter than the original URL).
 
 Example:
+
 Run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
 You may need to setup ssh keys for the above to work.
 This makes your url: `https://myserver.serveo.net` and then you would replace the
@@ -64,21 +65,26 @@ The new modding tool will make this process much easier when it is released.
 Instead of using a private server, you might be able to use something like
 [mitmproxy](https://mitmproxy.org/) or [Fiddler](https://www.telerik.com/fiddler)
 to modify the server responses. This did not work for me as the game always
-crashed but it might work for you.
+crashed (works for other requests though) but it might work for you.
 
 ## Installation
 
 1. Install [Python](https://www.python.org/downloads/) >= 3.9
+
 1. Run `pip install -U tbcms`
 
 ## Usage
 
 1. Run `python -m tbcms` or `py -m tbcms` depending on
     your system.
+
 1. Run `python -m tbcms --help` for more information.
+
 1. Read [jamesiotio's CITM](https://github.com/jamestiotio/CITM) on how to
     format the list of presents.
+
 1. Create a file called `presents.json` somewhere and put your presents in it.
+
 1. Run `python -m tbcms --presents path/to/presents.json` to start
     server.
 
@@ -148,5 +154,5 @@ I know that this is not a Flask issue because Flask responds correctly with a
 
 It's probably possible to do this method but I can't be bothered to do it.
 
-Even though this alternative method is not effective, I spent a lot of time on it so I
-wanted to include it here.
+Even though this alternative method is not effective, I spent a lot of time on it
+so I wanted to include it here.
