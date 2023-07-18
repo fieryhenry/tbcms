@@ -27,4 +27,4 @@ debug = args.debug
 port = args.port
 host = args.host
 presents = args.presents
-server.run(debug=debug, port=port, host=host, presents_path=presents)
+server.run(debug=debug, port=port, host=host, path=presents)

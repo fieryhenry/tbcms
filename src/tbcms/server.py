@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import shutil
 import time
 from typing import Any, Optional
 
@@ -41,7 +40,7 @@ def get_presents() -> list[dict[str, Any]]:
     Returns:
         list[dict[str, Any]]: The presents
     """
-    path = get_file_path("presents.json")
+    path = os.environ.get("PRESENTS_PATH", get_file_path("presents.json"))
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -57,20 +56,6 @@ def get_presents() -> list[dict[str, Any]]:
         item,
     )
     return data
-
-
-def save_presents(path: str):
-    """Save the presents to the presents.json file
-
-    Args:
-        path (str): The path to the presents
-    """
-    if path == get_file_path("presents.json"):
-        return
-    shutil.copy(
-        path,
-        get_file_path("presents.json"),
-    )
 
 
 app = flask.Flask(__name__)
@@ -336,9 +321,11 @@ def run(
     debug: bool = False,
     port: int = 80,
     host: str = "0.0.0.0",
-    presents_path: Optional[str] = None,
+    path: Optional[str] = None,
 ) -> None:
     """Run the server"""
-    if presents_path is not None:
-        save_presents(presents_path)
+    if path is not None:
+        os.environ["PRESENTS_PATH"] = os.path.abspath(path)
+    else:
+        path = os.environ.get("PRESENTS_PATH", get_file_path("presents.json"))
     app.run(debug=debug, host=host, port=port)
