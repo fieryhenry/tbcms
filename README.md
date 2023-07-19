@@ -15,47 +15,53 @@ the ban risk of other methods.
 
 ## Prerequisites
 
-I won't go into detail on how to do all of the individual steps as there are
-already many tutorials on how to do them.
+I won't go into detail on how to do all of the individual steps such as how to
+extract the apk, sign it and setup Frida. You can find tutorials on how to do
+all of that online.s
 
-1. You will need to modify the game to always verify the
-nyanko-signature of the server responses as we don't know PONOS's private key.
-This can be done using [Frida](https://frida.re/) and this script:
+1.
+    You will need to modify the game to always verify the
+    nyanko-signature of the server responses as we don't know PONOS's private key.
+    This can be done using [Frida](https://frida.re/) and this script:
 
-```js
-let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhjS2_j"
-// Botan::PK_Verifier::verify_message(...)
+    ```js
+    let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhjS2_j"
+    // Botan::PK_Verifier::verify_message(...)
 
-Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
-    onLeave: function (retval) {
-        retval.replace(0x1)
-    }
-})
-```
+    Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
+        onLeave: function (retval) {
+            retval.replace(0x1)
+        }
+    })
+    ```
 
-or just by patching the libnative-lib.so file using a hex editor to make the
-function always return 1.
+    Alternativly you can patch the libnative-lib.so file using a hex editor to make
+    the function always return 1.
 
-You also need to replace the <https://nyanko-items.ponosgames.com> URL in the
-libnative-lib.so files with your own server URL. This can be done by extracting
-the APK using something like
-[apktool](https://ibotpeaches.github.io/Apktool/). Then you can modify the
-`libnative-lib.so` files in /lib using a hex editor (or notepad maybe). Then you
-can repack the APK using apktool and sign it using
-[apksigner](https://developer.android.com/studio/command-line/apksigner).
+1.
+    You also need to replace the <https://nyanko-items.ponosgames.com> URL in the
+    libnative-lib.so files with your own server URL. This can be done by extracting
+    the APK using something like
+    [apktool](https://ibotpeaches.github.io/Apktool/).
+    1. Then you can modify the `libnative-lib.so` files in /lib using a hex editor
+    (or notepad maybe).
+    1.Then you can repack the APK using apktool and sign it using
+    [apksigner](https://developer.android.com/studio/command-line/apksigner).
 
-The URL needs to be the same length as the original URL and it needs to have
-/items/ at the end with underscores padding the rest of the URL.
-The underscores are used to make the URL the same length as the original URL.
-The URL also needs to start with https and so you can use a service like
-[Serveo](https://serveo.net/) to do the https part for you. Just follow the
-instructions on the website. I recommend you to get a custom subdomain so it
-doesn't change (you can use any subdomain as long as the total url length is
-shorter than the original URL).
+1.
+    The URL needs to be the same length as the original URL and it needs to have
+    /items/ at the end with underscores padding the rest of the URL.
+
+    The underscores are used to make the URL the same length as the original URL.
+    The URL also needs to start with https and so you can use a service like
+    [Serveo](https://serveo.net/) to do the https part for you. Just follow the
+    instructions on the website. I recommend you to get a custom subdomain so it
+    doesn't change (you can use any subdomain as long as the total url length is
+    shorter than the original URL).
 
 Example:
 
-Run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
+You can run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
 You may need to setup ssh keys for the above to work.
 This makes your url: `https://myserver.serveo.net` and then you would replace the
 ponos url with `https://myserver.serveo.net/items/_`.

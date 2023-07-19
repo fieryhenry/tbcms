@@ -45,11 +45,15 @@ def get_presents() -> list[dict[str, Any]]:
         data = json.load(f)
 
     item = {
-        "id": 1,
+        "presentCode": 1,
         "title": "Mailbox Private Server",
         "body": "Made by fieryhenry and made possible\nby jamestiotio's original work:\nhttps://github.com/jamestiotio/CITM",
         "createdAt": int(time.time()),
-        "items": [{"itemId": 22, "itemCategory": 0, "amount": 0, "title": "Catfood"}],
+        "acceptedAt": 1,
+        "items": [
+            {"itemId": 22, "itemCategory": 0, "amount": 0, "title": "Catfood"},
+            {"itemId": 22, "itemCategory": 0, "amount": 0, "title": "Catfood"},
+        ],
     }
     data.insert(
         0,
@@ -187,16 +191,7 @@ def items_presents() -> Any:
     if nonce is None:
         return "nonce is None"
 
-    auth_header = read_auth_header()
-    account_code = get_account_code(auth_header)
-    country_code = get_country_code(auth_header)
-    version = get_version(auth_header)
-
     presents = get_presents()
-    for present in presents:
-        present["country"] = country_code
-        present["clientVersion"] = version
-        present["accountId"] = account_code
 
     json_data = {
         "statusCode": 1,
