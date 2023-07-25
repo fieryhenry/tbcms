@@ -25,9 +25,11 @@ all of that online.s
     This can be done using [Frida](https://frida.re/) and this script:
 
     ```js
-    let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhjS2_j"
-    // Botan::PK_Verifier::verify_message(...)
+    let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhmS2_m" // 64 bit
+    // or
+    let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhjS2_j" // 32 bit
 
+    // Botan::PK_Verifier::verify_message(...)
     Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
         onLeave: function (retval) {
             retval.replace(0x1)
