@@ -36,6 +36,9 @@ all of that online.
     })
     ```
 
+    You should only use the function for the correct architecture of your
+    device.
+
     Alternativly you can patch the libnative-lib.so file using a hex editor to
     make the function always return 1.
 
