@@ -13,7 +13,7 @@ setuptools.setup(
     description="",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/fieryhenry/tbcms",
+    url="https://github.com/fieryhenry/TBCMailServer",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
