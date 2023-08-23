@@ -42,11 +42,13 @@ all of that online.
 1. You also need to replace the `https://nyanko-items.ponosgames.com` URL in
     the libnative-lib.so files with your own server URL. This can be done by
     extracting the APK using something like
-    [apktool](https://ibotpeaches.github.io/Apktool/).
+    [apktool](https://ibotpeaches.github.io/Apktool/) or
+    [APKToolGui](https://github.com/AndnixSH/APKToolGUI)
 1. Then you can modify the `libnative-lib.so` files in the `lib` folder using a
    hex editor (or notepad maybe).
 1. Then you can repack the APK using apktool and sign it using
-    [apksigner](https://developer.android.com/studio/command-line/apksigner).
+    [apksigner](https://developer.android.com/studio/command-line/apksigner) or
+    [APKToolGui](https://github.com/AndnixSH/APKToolGUI).
 1. The URL needs to be the same length as the original URL and it needs to have
     /items/ at the end with underscores padding the rest of the URL.
 
@@ -60,9 +62,9 @@ all of that online.
 Example:
 
 You can run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
-You may need to setup ssh keys for the above to work.
-This makes your url: `https://myserver.serveo.net` and then you would replace the
-ponos url with `https://myserver.serveo.net/items/_`.
+You may need to setup ssh keys for the above to work (follow the given
+instructions) This makes your url: `https://myserver.serveo.net` and then you
+would replace the ponos url with `https://myserver.serveo.net/items/_`.
 
 Instead of using a private server, you might be able to use something like
 [mitmproxy](https://mitmproxy.org/) or [Fiddler](https://www.telerik.com/fiddler)
