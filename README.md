@@ -17,12 +17,11 @@ the ban risk of other methods.
 
 I won't go into detail on how to do all of the individual steps such as how to
 extract the apk, sign it and setup Frida. You can find tutorials on how to do
-all of that online.s
+all of that online.
 
-1.
-    You will need to modify the game to always verify the
-    nyanko-signature of the server responses as we don't know PONOS's private key.
-    This can be done using [Frida](https://frida.re/) and this script:
+1. You will need to modify the game to always verify the
+    nyanko-signature of the server responses as we don't know PONOS's private
+    key. This can be done using [Frida](https://frida.re/) and this script:
 
     ```js
     let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhmS2_m" // 64 bit
@@ -37,21 +36,18 @@ all of that online.s
     })
     ```
 
-    Alternativly you can patch the libnative-lib.so file using a hex editor to make
-    the function always return 1.
+    Alternativly you can patch the libnative-lib.so file using a hex editor to
+    make the function always return 1.
 
-1.
-    You also need to replace the <https://nyanko-items.ponosgames.com> URL in the
-    libnative-lib.so files with your own server URL. This can be done by extracting
-    the APK using something like
+1. You also need to replace the `https://nyanko-items.ponosgames.com` URL in
+    the libnative-lib.so files with your own server URL. This can be done by
+    extracting the APK using something like
     [apktool](https://ibotpeaches.github.io/Apktool/).
-    1. Then you can modify the `libnative-lib.so` files in /lib using a hex editor
-    (or notepad maybe).
-    1.Then you can repack the APK using apktool and sign it using
+1. Then you can modify the `libnative-lib.so` files in the `lib` folder using a
+   hex editor (or notepad maybe).
+1. Then you can repack the APK using apktool and sign it using
     [apksigner](https://developer.android.com/studio/command-line/apksigner).
-
-1.
-    The URL needs to be the same length as the original URL and it needs to have
+1. The URL needs to be the same length as the original URL and it needs to have
     /items/ at the end with underscores padding the rest of the URL.
 
     The underscores are used to make the URL the same length as the original URL.
@@ -67,8 +63,6 @@ You can run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
 You may need to setup ssh keys for the above to work.
 This makes your url: `https://myserver.serveo.net` and then you would replace the
 ponos url with `https://myserver.serveo.net/items/_`.
-
-The new modding tool will make this process much easier when it is released.
 
 Instead of using a private server, you might be able to use something like
 [mitmproxy](https://mitmproxy.org/) or [Fiddler](https://www.telerik.com/fiddler)
@@ -122,9 +116,6 @@ Example presents.json
     }
 ]
 ```
-
-Note that `created` is now `createdAt`. You also don't need to fill in `country`
-or `clientVersion` or `accountId` as the server will do that for you.
 
 ## Alternative Method
 
