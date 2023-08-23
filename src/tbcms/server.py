@@ -5,7 +5,6 @@ import time
 from typing import Any, Optional
 
 import flask
-import jwt
 import requests
 
 
@@ -86,70 +85,6 @@ def items(path: str = "") -> Any:
     return forward_request_rq(
         flask.request, "https://nyanko-items.ponosgames.com/" + path
     )
-
-
-def read_auth_header() -> dict[str, Any]:
-    """Read the Authorization header
-
-    Returns:
-        dict[str, Any]: The data in the header
-    """
-    auth_header = flask.request.headers.get("Authorization")
-    if auth_header is None:
-        return {}
-
-    match = re.match(r"Bearer (?P<token>.+)", auth_header)
-    if match is None:
-        return {}
-
-    token = match.group("token")
-    if token is None:
-        return {}
-
-    data = jwt.decode(token, algorithms=["HS256"], options={"verify_signature": False})
-    return data
-
-
-def get_account_code(token: dict[str, Any]) -> str:
-    """Get the account code from the token
-
-    Args:
-        token (dict[str, Any]): The token
-
-    Returns:
-        str: The account code
-    """
-    return token.get("accountCode", "")
-
-
-def get_country_code(token: dict[str, Any]) -> str:
-    """Get the country code from the token
-
-    Args:
-        token (dict[str, Any]): The token
-
-    Returns:
-        str: The country code
-    """
-    client_info: dict[str, Any] = token.get("clientInfo", {})
-    client: dict[str, Any] = client_info.get("client", {})
-    country_code: str = client.get("countryCode", "")
-    return country_code
-
-
-def get_version(token: dict[str, Any]) -> str:
-    """Get the version from the token
-
-    Args:
-        token (dict[str, Any]): The token
-
-    Returns:
-        str: The version
-    """
-    client_info: dict[str, Any] = token.get("clientInfo", {})
-    client: dict[str, Any] = client_info.get("client", {})
-    version: str = client.get("version", "")
-    return version
 
 
 def items_presents_count() -> Any:
