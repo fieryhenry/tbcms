@@ -80,7 +80,7 @@ crashed (works for other requests though) but it might work for you.
 
 1. Run `pip install -U tbcms`
 
-## From Source
+### From Source
 
 1. Install [Git](https://git-scm.com/downloads)
 
