@@ -80,6 +80,24 @@ crashed (works for other requests though) but it might work for you.
 
 1. Run `pip install -U tbcms`
 
+## From Source
+
+1. Install [Git](https://git-scm.com/downloads)
+
+2. Run the following commands: (You may have to replace `py` with `python` or
+   `python3`)
+
+```bash
+git clone https://github.com/fieryhenry/TBCMailServer.git
+pip install -e TBCMailServer/
+py -m TBCMailServer
+```
+
+If you want to use the tool again all you need to do is run the `py -m tbcms` command
+
+Then if you want the latest changes you only need to run `git pull` in the downloaded
+`TBCMailServer` folder. (use `cd` to change the folder)
+
 ## Usage
 
 1. Run `python -m tbcms` or `py -m tbcms` depending on
