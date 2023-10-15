@@ -13,7 +13,9 @@ the ban risk of other methods.
     hacking method and the format of the presents. It no longer works due to
     PONOS adding a signature to the server responses as well as other changes.
 
-## Prerequisites
+## Setup
+
+### Manual Setup
 
 I won't go into detail on how to do all of the individual steps such as how to
 extract the apk, sign it and setup Frida. You can find tutorials on how to do
@@ -62,12 +64,145 @@ all of that online.
     doesn't change (you can use any subdomain as long as the total url length is
     shorter than the original URL).
 
-Example:
+    Example:
 
-You can run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
-You may need to setup ssh keys for the above to work (follow the given
-instructions) This makes your url: `https://myserver.serveo.net` and then you
-would replace the ponos url with `https://myserver.serveo.net/items/_`.
+    You can run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
+    You may need to setup ssh keys for the above to work (follow the given
+    instructions) This makes your url: `https://myserver.serveo.net` and then you
+    would replace the ponos url with `https://myserver.serveo.net/items/_`.
+
+### Setup Using TBCML
+
+[TBCML](https://github.com/fieryhenry/TBCModLoader) is a library I've made and
+recently released to make modding the game easier and more automated. It has a
+few features that we can use to setup the apk for the private server. We don't
+need to setup Frida as TBCML injects [Frida
+Gadget](https://frida.re/docs/gadget/) into the libnative file.
+
+Read the TBCML GitHub page so you can get the library installed. However at the
+moment it doesn't work for new apks (I think 12.6.0 and up) due to an issue with
+apktool. Also some people have found that tbcml doesn't install for them, so you
+might need to do the manual setup for the mail server.
+
+The following script should do what we need and you can modify it for the
+version you want and the subdomain you want (see the manual setup section on how
+to use
+serveo to get a URL):
+
+```python
+from tbcml.core import (
+    CountryCode,
+    GameVersion,
+    Apk,
+    Mod,
+    LibPatch,
+    StringReplacePatch,
+    FridaScript,
+    config,
+    ConfigKey,
+)
+
+config.set(ConfigKey.ALLOW_SCRIPT_MODS, True)
+
+cc = CountryCode.EN # change cc to be what you want
+gv = GameVersion.from_string_latest("12.4.1", cc) # change gv to be what you want (later versions may not work with the current version of tbcml)
+apk = Apk(gv, cc)
+print("Downloading APK...")
+apk.download()
+print("Extracting APK...")
+apk.extract()
+apk.copy_server_files()
+mod = Mod(
+    name="Private Server Setup",
+    author="fieryhenry",
+    description="A mod that disables signature verification and replaces the nyanko-items url with a custom one",
+    mod_id=Mod.create_mod_id(),
+    mod_version="1.0.0",
+    encrypt=False,
+)
+
+script_64 = """
+let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhmS2_m" // 64 bit
+
+// Botan::PK_Verifier::verify_message(...)
+Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
+    onLeave: function (retval) {
+        retval.replace(0x1)
+    }
+})"""
+
+script_32 = """
+let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhjS2_j" // 32 bit
+
+// Botan::PK_Verifier::verify_message(...)
+Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
+    onLeave: function (retval) {
+        retval.replace(0x1)
+    }
+})"""
+
+script_name = "force-verify-nyanko-signature"
+
+id = FridaScript.create_id()
+x86_script = FridaScript("x86", cc, gv, script_32, script_name, id, mod)
+x86_64_script = FridaScript("x86_64", cc, gv, script_64, script_name, id, mod)
+arm_32_script = FridaScript("armeabi-v7a", cc, gv, script_32, script_name, id, mod)
+arm_64_script = FridaScript("arm64-v8a", cc, gv, script_64, script_name, id, mod)
+mod.scripts.add_script(x86_script)
+mod.scripts.add_script(x86_64_script)
+mod.scripts.add_script(arm_32_script)
+mod.scripts.add_script(arm_64_script)
+
+string_patch = StringReplacePatch(
+    "https://nyanko-items.ponosgames.com",
+    "https://bc.serveo.net/items/", # replace bc with whatever sub-domain you are using 
+    "_",
+)
+patch_name = "replace-nyanko-items-url"
+id = LibPatch.create_id()
+libpatch_x86 = LibPatch(
+    patch_name,
+    "x86",
+    cc,
+    gv,
+    [string_patch],
+    id,
+)
+libpatch_x86_64 = LibPatch(
+    patch_name,
+    "x86_64",
+    cc,
+    gv,
+    [string_patch],
+    id,
+)
+libpatch_arm_32 = LibPatch(
+    patch_name,
+    "armeabi-v7a",
+    cc,
+    gv,
+    [string_patch],
+    id,
+)
+libpatch_arm_64 = LibPatch(
+    patch_name,
+    "arm64-v8a",
+    cc,
+    gv,
+    [string_patch],
+    id,
+)
+
+mod.patches.add_patch(libpatch_x86)
+mod.patches.add_patch(libpatch_x86_64)
+mod.patches.add_patch(libpatch_arm_32)
+mod.patches.add_patch(libpatch_arm_64)
+
+apk.load_mods([mod])
+
+print(apk.final_apk_path)
+
+```
 
 Instead of using a private server, you might be able to use something like
 [mitmproxy](https://mitmproxy.org/) or [Fiddler](https://www.telerik.com/fiddler)
