@@ -64,6 +64,18 @@ def get_presents() -> list[dict[str, Any]]:
 app = flask.Flask(__name__)
 
 
+@app.route("/<path:path>")
+def everything(path: str) -> Any:
+    if path.startswith("/items/"):
+        return items(path[7:])
+    if "." in path.split("/")[0]:
+        path = f"/items/{'/'.join(path.split('/')[1:])}"
+        return items(path)
+    return forward_request_rq(
+        flask.request, "https://nyanko-items.ponosgames.com/" + path
+    )
+
+
 @app.route("/items/<path:path>")
 @app.route("/items/")
 def items(path: str = "") -> Any:
@@ -242,7 +254,8 @@ def fix_path(path: str) -> str:
         path = path + "/"
     path = re.sub(r"/_+", "/", path)
     path = path.replace("/.com/", "/")  # idk why this happens
-    path = path.replace("/om/", "/")  # idk why this happens
+    path = path.replace("/om/", "/")
+    path = path.replace("/m/", "/")
 
     return path
 
