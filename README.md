@@ -66,7 +66,8 @@ all of that online.
 
     Example:
 
-    You can run a command like: `ssh -R myserver:80:localhost:80 serveo.net`
+    You can run a command like: `ssh -R myserver:80:localhost:5000 serveo.net`
+    You can change the port 5000 to whatever port you want.
     You may need to setup ssh keys for the above to work (follow the given
     instructions) This makes your url: `https://myserver.serveo.net` and then you
     would replace the ponos url with `https://myserver.serveo.net/items/_`.
@@ -98,20 +99,18 @@ from tbcml.core import (
     LibPatch,
     StringReplacePatch,
     FridaScript,
-    config,
-    ConfigKey,
+    AdbHandler,
 )
 
-config.set(ConfigKey.ALLOW_SCRIPT_MODS, True)
-
-cc = CountryCode.EN # change cc to be what you want
-gv = GameVersion.from_string_latest("12.4.1", cc) # change gv to be what you want (later versions may not work with the current version of tbcml)
-apk = Apk(gv, cc)
+cc = CountryCode.EN  # change cc to be what you want
+gv = GameVersion.from_string_latest(
+    "12.3.0", cc
+)  # change gv to be what you want (later versions may not work with the current version of tbcml)
+apk = Apk(gv, cc, allowed_script_mods=True)
 print("Downloading APK...")
 apk.download()
 print("Extracting APK...")
 apk.extract()
-apk.copy_server_files()
 mod = Mod(
     name="Private Server Setup",
     author="fieryhenry",
@@ -129,7 +128,8 @@ Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
     onLeave: function (retval) {
         retval.replace(0x1)
     }
-})"""
+})
+"""
 
 script_32 = """
 let func_name = "_ZN5Botan11PK_Verifier14verify_messageEPKhjS2_j" // 32 bit
@@ -139,7 +139,8 @@ Interceptor.attach(Module.findExportByName("libnative-lib.so", func_name), {
     onLeave: function (retval) {
         retval.replace(0x1)
     }
-})"""
+})
+"""
 
 script_name = "force-verify-nyanko-signature"
 
@@ -155,7 +156,7 @@ mod.scripts.add_script(arm_64_script)
 
 string_patch = StringReplacePatch(
     "https://nyanko-items.ponosgames.com",
-    "https://bc.serveo.net/items/", # replace bc with whatever sub-domain you are using 
+    "https://bc.serveo.net:5000/items/",  # replace bc with whatever sub-domain you are using and replace 5000 with whatever port you are using
     "_",
 )
 patch_name = "replace-nyanko-items-url"
@@ -198,11 +199,17 @@ mod.patches.add_patch(libpatch_x86_64)
 mod.patches.add_patch(libpatch_arm_32)
 mod.patches.add_patch(libpatch_arm_64)
 
+apk.set_app_name("Battle Cats Private Server")
+apk.set_package_name("jp.co.ponos.battlecatsps")
+
 apk.load_mods([mod])
 
 print(apk.final_apk_path)
 
 ```
+
+You may get `Relocation R32 not supported!` when running the script. This is
+normal and you can ignore it.
 
 Instead of using a private server, you might be able to use something like
 [mitmproxy](https://mitmproxy.org/) or [Fiddler](https://www.telerik.com/fiddler)
@@ -239,6 +246,9 @@ Then if you want the latest changes you only need to run `git pull` in the downl
     your system.
 
 1. Run `python -m tbcms --help` for more information.
+
+1. You can change the port using the `--port` option. e.g.
+    `python -m tbcms --port 5000`
 
 1. Read [jamesiotio's CITM](https://github.com/jamestiotio/CITM) on how to
     format the list of presents.
