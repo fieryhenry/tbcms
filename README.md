@@ -1,5 +1,9 @@
 # TBCMailServer
 
+## BETTER METHOD (No server required): <https://github.com/fieryhenry/mailboxhack>
+
+If you want to use the old method, you can still use this tool.
+
 A private server for the mailbox in The Battle Cats.
 
 It allows you to get any cat, talent orb, or item amount you want without
@@ -74,7 +78,7 @@ all of that online.
 
 ### Setup Using TBCML
 
-[TBCML](https://github.com/fieryhenry/TBCModLoader) is a library I've made and
+[TBCML](https://github.com/fieryhenry/tbcml) is a library I've made and
 recently released to make modding the game easier and more automated. It has a
 few features that we can use to setup the apk for the private server. We don't
 need to setup Frida as TBCML injects [Frida
