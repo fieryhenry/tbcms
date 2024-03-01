@@ -1,10 +1,16 @@
 # TBCMailServer
 
-## BETTER METHOD (No server required): <https://github.com/fieryhenry/mailboxhack>
-
-If you want to use the old method, you can still use this tool.
-
 A private server for the mailbox in The Battle Cats.
+
+## BETTER METHODS
+
+This code is mainly obsolete now, here are some better alternatives:
+
+[MailboxHack](https://github.com/fieryhenry/mailboxhack) - No server required
+
+[Battle Cats Private Server](https://github.com/fieryhenry/bcps) - A better server design that supports any url you want
+
+## Old Method
 
 It allows you to get any cat, talent orb, or item amount you want without
 the ban risk of other methods.
